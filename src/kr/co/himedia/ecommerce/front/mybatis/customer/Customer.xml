@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.customer.Customer">
+	
+	<select id="reviewList" resultType="saleDto" parameterType="customerDto">
+		SELECT
+			CONTENTS
+			, NVL(RATING, 0) RATING
+			, TO_CHAR(TB_REV.DT_REG, 'YYYY/MM/DD') DT_REG
+			, SLE_NM
+			, IMG
+			, TB_SLE.SEQ_SLE
+			, DESCES
+			, PRICE_SALE
+		FROM
+			TB_REV INNER JOIN TB_SLE ON TB_REV.SEQ_SLE = TB_SLE.SEQ_SLE
+		WHERE
+			SEQ_CST = #{seq_cst}
+		ORDER BY
+			TB_REV.DT_REG DESC
+	</select>
+	
+	<select id="wishList" resultType="saleDto" parameterType="wishDto">
+		SELECT 
+			TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, NVL(avg(rating), 0) rating
+		FROM 
+			TB_SLE INNER JOIN TB_WIS ON TB_SLE.SEQ_SLE = TB_WIS.SEQ_SLE 
+			LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE 
+			TB_WIS.SEQ_CST = #{seq_cst}
+		GROUP BY
+			TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+	</select>
+	
+	<select id="wisList" resultType="reViewDto" parameterType="pagingDto">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (ORDER BY tb_sle.DT_REG DESC) rnum
+				, tb_wis.SEQ_SLE
+				, tb_wis.SEQ_CST
+				, tb_sle.PRICE_SALE
+				, tb_sle.SLE_NM
+				, tb_sle.IMG
+			FROM
+				TB_WIS				tb_wis
+				INNER JOIN TB_SLE	tb_sle ON tb_wis.SEQ_SLE = tb_sle.SEQ_SLE
+			WHERE
+				tb_wis.SEQ_CST = #{register}
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]> 
+		ORDER BY rnum
+	</select>
+	
+	<!-- 찜한상품 갯수 확인 -->
+	<select id="countWis" parameterType="pagingDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_WIS
+		WHERE
+			SEQ_CST = #{register}
+	</select>
+	
+	<delete id="deleteWish" parameterType="wishDto">
+		DELETE
+		FROM
+			TB_WIS
+		WHERE
+			SEQ_CST = #{seq_cst}
+		AND
+			 SEQ_SLE = #{seq_sle}
+	</delete>
+	
+	<!-- 찜 여부 확인 -->
+	<select id="countWish" parameterType="wishDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_WIS
+		WHERE
+			SEQ_CST = #{seq_cst}
+		AND
+			 SEQ_SLE = #{seq_sle}
+	</select>
+	
+	<insert id="insertWish" parameterType="wishDto">
+		INSERT INTO TB_WIS
+			(SEQ_CST, SEQ_SLE)
+		VALUES
+			(#{seq_cst}, #{seq_sle})
+	</insert>
+	
+	<update id="withdrawal" parameterType="customerDto">
+		UPDATE
+			TB_CST
+		SET
+			TC_STATE = 2
+			, DT_UPT = SYSDATE
+			, UPDATER = #{updater}
+		WHERE
+			SEQ_CST = #{seq_cst}
+	</update>
+		
+	<update id="update" parameterType="customerDto">
+		UPDATE
+			TB_CST
+		SET
+			PHONE			= #{phone}
+			, POSTCODE		= #{postcode}
+			, ADDR1			= #{addr1}
+			, ADDR3			= #{addr3}
+			, CST_EMAIL		= #{cst_email}
+			, DT_UPT		= SYSDATE
+			, UPDATER		= #{updater}
+			<if test="flg_sms != before_flg_sms">
+			, FLG_SMS		= #{flg_sms}
+			, DT_SMS		= SYSDATE
+			</if>
+			<if test="flg_email != before_flg_email">
+			, FLG_EMAIL		= #{flg_email}
+			, DT_EMAIL		= SYSDATE
+			</if>
+		WHERE
+			SEQ_CST = #{seq_cst}
+	</update>
+		
+	<select id="select" resultType="customerDto" parameterType="customerDto">
+		SELECT
+			SEQ_CST, ID, PASSWD, CST_NM, PHONE, POSTCODE, ADDR1, ADDR3, CST_EMAIL, FLG_SMS, FLG_EMAIL, TC_STATE
+		FROM
+			TB_CST
+		WHERE
+			ID = #{id}
+	</select>
+	
+	<select id="selectPwd" resultType="customerDto" parameterType="customerDto">
+		SELECT
+			SEQ_CST
+			, PASSWD
+		FROM
+			TB_CST
+		WHERE
+			ID = #{id}
+	</select>
+	
+	<select id="sequence" resultType="java.lang.Integer">
+		SELECT SQ_SEQ_CST.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="countPwd" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_CST
+		WHERE
+			PASSWD 			= #{passwd}
+			AND SEQ_CST 	= #{seq_cst}
+	</select>
+	
+	
+	<update id="changePasswd" parameterType="customerDto">
+		UPDATE
+			TB_CST
+		SET
+			PASSWD		= #{passwd}
+		WHERE
+			SEQ_CST 	= #{seq_cst}
+	</update>
+	
+</mapper>

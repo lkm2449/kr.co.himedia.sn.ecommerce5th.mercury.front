@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.join.Join">
+
+
+	<select id="duplicateCheck" parameterType="customerDto" resultType="java.lang.Integer">
+	
+	SELECT
+		Count(*)
+	FROM
+		TB_CST
+	WHERE
+		CST_NM = #{cst_nm}
+		and
+		CST_EMAIL =#{cst_email}
+	
+	</select>
+
+	<select id ="idCheck" parameterType="customerDto" resultType="java.lang.Integer">
+	SELECT
+		COUNT(*)
+	FROM
+		TB_CST
+	WHERE
+		ID = #{id}
+	
+	</select>
+
+
+	<update id="update" parameterType="customerDto">
+		UPDATE
+			TB_CST
+		SET
+			PHONE			= #{phone}
+			, POSTCODE		= #{postcode}
+			, ADDR1			= #{addr1}
+			, ADDR3			= #{addr3}
+			, CST_EMAIL		= #{cst_email}
+			, DT_UPT		= SYSDATE
+			, UPDATER		= #{updater}
+			<if test="flg_sms != before_flg_sms">
+        	, FLG_SMS       = #{flg_sms}
+        	, DT_SMS        = SYSDATE
+        	</if>
+        	<if test="flg_email != before_flg_email">
+        	, FLG_EMAIL     = #{flg_email}
+        	, DT_EMAIL      = SYSDATE
+        	</if>
+		WHERE
+			SEQ_CST = #{seq_cst}
+	</update>
+
+
+	<insert id="insert" parameterType="customerDto">
+		INSERT INTO TB_CST
+			(SEQ_CST, ID, PASSWD, CST_NM, PHONE, POSTCODE, ADDR1, ADDR2, ADDR3, CST_EMAIL, FLG_SMS, DT_SMS, FLG_EMAIL, DT_EMAIL, TC_STATE, DT_REG, REGISTER, SSO)
+		VALUES
+			(#{seq_cst}, #{id}, #{passwd}, #{cst_nm}, #{phone}, #{postcode}, #{addr1}, #{addr2}, #{addr3}, #{cst_email}, #{flg_sms}, SYSDATE, #{flg_email}, SYSDATE, 1, SYSDATE, #{seq_cst}, #{sso})
+	</insert>
+	
+	<select id="sequence" resultType="java.lang.Integer">
+		SELECT SQ_SEQ_CST.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="listing" parameterType="java.lang.String" resultType="customerDto">
+		SELECT
+			ID
+		FROM
+			TB_CST
+		WHERE
+			ID = #{id}
+	</select>
+	
+		
+	<select id="search" resultType="java.lang.Integer" parameterType="customerDto">
+		SELECT
+			count(*)
+		FROM
+			TB_CST
+		WHERE
+			CST_NM = #{cst_nm}
+			and
+			CST_EMAIL =#{cst_email}
+	</select>
+</mapper>

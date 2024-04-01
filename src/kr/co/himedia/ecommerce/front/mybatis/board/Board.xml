@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.board.Board">
+
+	<select id="count" parameterType="pagingDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(ROWNUM)
+		FROM
+			TB_BBS bbs
+	</select>
+	
+	<select id="myList" parameterType="pagingDto" resultType="boardDto">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (ORDER BY bbs.FLG_TOP, bbs.DT_REG DESC) rnum
+				, bbs.SEQ_BBS
+				, bbs.CD_BBS_TAB
+				, bbs.REGISTER
+				, bbs.TITLE
+				, bbs.CONTENTS
+				, bbs.FLG_TOP
+				, TO_CHAR(bbs.DT_REG, 'YYYY-MM-DD') DT_REG
+			FROM
+				TB_BBS bbs
+			WHERE
+				CD_BBS_TYPE = #{cd_bbs_type}
+				AND REGISTER = #{register}
+				AND bbs.flg_delete = 'N'	
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]> 
+		ORDER BY FLG_TOP, rnum
+	</select>
+	
+	
+	<select id="list" parameterType="pagingDto" resultType="boardDto">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (ORDER BY bbs.FLG_TOP, bbs.DT_REG DESC) rnum
+				, bbs.SEQ_BBS
+				, bbs.CD_BBS_TAB
+				, bbs.TITLE
+				, bbs.CONTENTS
+				, bbs.FLG_TOP
+				, TO_CHAR(bbs.DT_REG, 'YYYY-MM-DD') DT_REG
+			FROM
+				TB_BBS bbs
+			WHERE
+				CD_BBS_TYPE = #{cd_bbs_type}
+				AND bbs.flg_delete = 'N'	
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]> 
+		ORDER BY FLG_TOP, rnum
+	</select>
+	
+
+	<select id="sequence" resultType="java.lang.Integer">
+		SELECT SQ_SEQ_BBS.NEXTVAL FROM DUAL
+	</select>
+	
+	<insert id="insert" parameterType="boardDto">
+		INSERT INTO TB_BBS
+			(SEQ_BBS, CD_BBS_TYPE, CD_BBS_TAB, TITLE, CONTENTS, FLG_TOP, FLG_DELETE, FILE_SAVE, FILE_ORIG, DT_REG, REGISTER)
+		VALUES
+			(#{seq_bbs}, #{cd_bbs_type}, #{cd_bbs_tab}, #{title}, #{contents}, #{flg_top}, #{flg_delete}, #{file_save}, #{file_orig}, SYSDATE, #{register})
+	</insert>
+
+	<update id="update" parameterType="boardDto">
+		UPDATE
+			TB_BBS
+		SET
+			CD_BBS_TAB	= #{cd_bbs_tab}
+			, TITLE		= #{title}
+			, CONTENTS	= #{contents}
+			, FLG_TOP	= #{flg_top}
+			, DT_UPT	= SYSDATE
+			, UPDATER	= #{updater}
+		WHERE
+			SEQ_BBS = #{seq_bbs}
+	</update>
+	
+	<update id="deleteFlag" parameterType="boardDto">
+		UPDATE
+			TB_BBS
+		SET
+			FLG_DELETE 	= 'Y'
+			, DT_UPT	= SYSDATE
+			, UPDATER	= #{updater}
+		WHERE
+			SEQ_BBS = #{seq_bbs}
+	</update>
+	
+		
+	<select id="select" parameterType="boardDto" resultType="boardDto">
+		SELECT
+			bbs.SEQ_BBS
+			, bbs.CD_BBS_TYPE
+			, bbs.CD_BBS_TAB
+			, bbs.TITLE
+			, bbs.CONTENTS
+			, bbs.FLG_TOP
+			, bbs.FILE_SAVE
+			, bbs.FILE_ORIG
+			, TO_CHAR(bbs.DT_REG, 'YYYY-MM-DD HH24:MI:SS') dt_reg
+			, TO_CHAR(bbs.DT_UPT, 'YYYY-MM-DD HH24:MI:SS') dt_upt
+		FROM
+			TB_BBS bbs
+		WHERE
+			SEQ_BBS = #{seq_bbs}
+	</select>
+	
+</mapper>

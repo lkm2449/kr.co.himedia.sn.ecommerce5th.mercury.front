@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.login.Login">
+	
+	<select id="loginProc" parameterType="java.lang.String" resultType="customerDto">
+		SELECT
+			SEQ_CST
+			, ID
+			, CST_NM
+			, PASSWD
+			, TC_STATE
+		FROM
+			TB_CST
+		WHERE
+			ID				= #{id}
+			AND ROWNUM		= 1
+	</select>
+	
+	<select id="searchId" parameterType="customerDto" resultType="customerDto">
+		SELECT
+			ID
+		FROM
+			TB_CST
+		WHERE
+			CST_NM			= #{cst_nm}
+			AND CST_EMAIL	= #{cst_email}
+	</select>
+	
+	<select id="searchPwd" parameterType="customerDto" resultType="customerDto">
+		SELECT
+			SEQ_CST
+		FROM
+			TB_CST
+		WHERE
+			CST_NM			= #{cst_nm}
+			AND ID			= #{id}
+			AND CST_EMAIL	= #{cst_email}
+	</select>
+	
+	<update id="changePasswd" parameterType="customerDto">
+		UPDATE
+			TB_CST
+		SET
+			PASSWD			= #{passwd}
+		WHERE
+			SEQ_CST			= #{seq_cst}
+	</update>
+	
+</mapper>

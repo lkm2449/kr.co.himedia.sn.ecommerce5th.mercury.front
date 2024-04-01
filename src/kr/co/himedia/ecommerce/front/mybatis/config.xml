@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL" />
+	</settings>
+	<typeAliases>
+		<typeAlias type="kr.co.himedia.ecommerce.common.dto.PagingDto"				alias="pagingDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.customer.dto.CustomerDto"	alias="customerDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.customer.dto.WishDto"		alias="wishDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.sale.dto.SaleDto"			alias="saleDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.animal.dto.AnimalDto"		alias="animalDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.board.dto.BoardDto"			alias="boardDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.buy.dto.BuyMstDto"			alias="buyMstDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.buy.dto.BuyDtlDto"			alias="buyDtlDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.buy.dto.PayDto"				alias="PayDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.board.dto.ReViewDto"			alias="reViewDto" />
+		<typeAlias type="kr.co.himedia.ecommerce.front.reply.dto.ReplyDto"			alias="ReplyDto" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/login/Login.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/join/Join.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/sale/Sale.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/customer/Customer.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/animal/Animal.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/board/Board.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/buy/BuyMaster.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/buy/BuyDetail.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/buy/Pay.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/review/Review.xml" />
+		<mapper resource="kr/co/himedia/ecommerce/front/mybatis/reply/Reply.xml" />
+	</mappers>
+</configuration>

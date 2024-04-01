@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.review.Review">
+	
+	<insert id="insertRev" parameterType="reViewDto">
+		INSERT INTO TB_REV
+			(SEQ_REV, SEQ_SLE, SEQ_CST, CONTENTS, RATING, DT_REG)
+		VALUES
+			(#{seq_rev}, #{seq_sle}, #{seq_cst}, #{contents}, #{rating}, SYSDATE)
+	</insert>
+	
+	<select id="sequenceRev" resultType="java.lang.Integer">
+		SELECT SQ_SEQ_REV.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="countRev" resultType="java.lang.Integer" parameterType="pagingDto">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_REV				tb_rev
+			INNER JOIN TB_SLE	tb_sle ON tb_rev.SEQ_SLE = tb_sle.SEQ_SLE
+		WHERE
+			tb_rev.SEQ_CST = #{register}
+	</select>
+	
+	<select id="selectRev" resultType="reViewDto" parameterType="pagingDto">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (ORDER BY tb_rev.DT_REG DESC) rnum
+				, tb_rev.SEQ_REV
+				, tb_rev.SEQ_SLE
+				, tb_rev.SEQ_CST
+				, tb_rev.CONTENTS
+				, tb_rev.RATING
+				, tb_sle.SLE_NM
+				, tb_sle.IMG
+			FROM
+				TB_REV				tb_rev
+				INNER JOIN TB_SLE	tb_sle ON tb_rev.SEQ_SLE = tb_sle.SEQ_SLE
+			WHERE
+				tb_rev.SEQ_CST = #{register}
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]> 
+		ORDER BY rnum
+	</select>
+	
+	<update id="updateRev" parameterType="reViewDto">
+		UPDATE
+			TB_BUY_DTL
+		SET
+			CD_STATE_REV	= 'Y'
+		WHERE
+			SEQ_BUY_DTL 	= #{seq_buy_dtl}
+	</update>
+	
+</mapper>

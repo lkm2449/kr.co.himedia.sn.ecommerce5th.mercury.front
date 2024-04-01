@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.buy.BuyDetail">
+	
+	<select id="listD" parameterType="buyMstDto" resultType="buyDtlDto">
+		SELECT
+			tb_sle.SLE_NM
+			, tb_sle.IMG
+			, tb_buy_dtl.PRICE
+			, tb_buy_dtl.COUNT
+			, TO_CHAR(tb_buy_dtl.DT_REG, 'YYYY-MM-DD') dt_reg
+		FROM
+			TB_BUY_DTL			tb_buy_dtl
+			INNER JOIN TB_SLE	tb_sle ON tb_buy_dtl.SEQ_SLE = tb_sle.SEQ_SLE
+		WHERE
+			tb_buy_dtl.SEQ_BUY_MST	= #{seq_buy_mst}
+			AND tb_buy_dtl.REGISTER	= #{register}
+	</select>
+	
+	<insert id="insertM" parameterType="buyDtlDto">
+		INSERT INTO TB_BUY_DTL
+			(SEQ_BUY_DTL, SEQ_BUY_MST, SEQ_SLE, PRICE, COUNT, DT_REG, REGISTER)
+		VALUES
+			(#{seq_buy_dtl}, #{seq_buy_mst}, #{seq_sle}, #{price}, #{count}, SYSDATE, #{register})
+	</insert>
+	
+	<select id="select" parameterType="buyMstDto" resultType="buyDtlDto">
+		SELECT
+			tb_sle.SLE_NM
+			, tb_sle.DESCES
+			, tb_sle.IMG
+			, tb_buy_dtl.SEQ_BUY_MST
+			, tb_buy_dtl.PRICE
+			, tb_buy_dtl.COUNT
+			, TO_CHAR(tb_buy_dtl.DT_REG, 'YYYY-MM-DD HH24:MI:SS') dt_reg
+		FROM
+			TB_BUY_DTL			tb_buy_dtl
+			INNER JOIN TB_SLE	tb_sle ON tb_buy_dtl.SEQ_SLE = tb_sle.SEQ_SLE
+		WHERE
+			tb_buy_dtl.SEQ_BUY_MST	= #{seq_buy_mst}
+			AND tb_buy_dtl.REGISTER	= #{register}
+	</select>
+	
+	<select id="revForm" parameterType="buyDtlDto" resultType="buyDtlDto">
+		SELECT
+			SLE_NM
+			, DESCES
+			, SEQ_SLE
+		FROM
+			TB_SLE
+		WHERE
+			SEQ_SLE	= #{seq_sle}
+	</select>
+	
+	<insert id="insert" parameterType="buyDtlDto">
+		INSERT INTO TB_BUY_DTL
+			(SEQ_BUY_DTL, SEQ_BUY_MST, SEQ_SLE, PRICE, COUNT, DT_REG, REGISTER, CD_STATE_REV)
+		VALUES
+			(#{seq_buy_dtl}, #{seq_buy_mst}, #{seq_sle}, #{price}, #{count}, SYSDATE, #{register}, 'N')
+	</insert>
+	
+	<select id="sequence" resultType="java.lang.Integer">
+		SELECT SQ_SEQ_BUY_DTL.NEXTVAL FROM DUAL
+	</select>
+	
+	<select id="list" parameterType="java.lang.Integer" resultType="buyDtlDto">
+		SELECT
+			/*+ first_rows(10) */ ROW_NUMBER() OVER (ORDER BY tb_buy_dtl.DT_REG DESC) rnum
+			, tb_buy_dtl.SEQ_BUY_DTL
+			, tb_buy_dtl.SEQ_BUY_MST
+			, tb_buy_dtl.SEQ_SLE
+			, tb_buy_dtl.PRICE
+			, tb_buy_dtl.COUNT
+			, TO_CHAR(tb_buy_dtl.DT_REG, 'YYYY-MM-DD') DT_REG
+			, tb_sle.IMG
+			, tb_buy_dtl.REGISTER
+			, tb_buy_dtl.CD_STATE_REV
+			, tb_sle.SLE_NM
+		FROM
+			TB_BUY_DTL			tb_buy_dtl
+			INNER JOIN TB_SLE	tb_sle ON tb_buy_dtl.SEQ_SLE = tb_sle.SEQ_SLE
+		WHERE
+			tb_buy_dtl.REGISTER	= #{register}
+	</select>
+	
+</mapper>

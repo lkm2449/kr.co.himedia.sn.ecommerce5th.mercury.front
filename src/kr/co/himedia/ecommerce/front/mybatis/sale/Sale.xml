@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.sale.Sale">
+	
+	<select id="searchCounting" resultType="java.lang.Integer" parameterType="saleDto">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_SLE INNER JOIN TB_CTG ON TB_SLE.CD_CTG = TB_CTG.CD_CTG, TB_CTG TB_CTG2
+		WHERE
+			CD_STATE_SALE = 1
+		AND 
+			TB_CTG.CD_CTG_PARENT = TB_CTG2.CD_CTG
+		AND
+			(SLE_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG.CTG_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG2.CTG_NM LIKE ('%' || #{searchWord} || '%'))
+	</select>
+	
+	<select id="counting" resultType="java.lang.Integer" parameterType="saleDto">
+		SELECT
+			COUNT(ROWNUM)
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND
+			CD_CTG LIKE ('%' || #{cd_ctg} || '%')
+	</select>
+	
+	<select id="salesList" resultType="saleDto" parameterType="saleDto">
+		SELECT
+			ROWNUM rnum
+			, TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, NVL(avg(rating), 0) rating
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND
+			CD_CTG LIKE ('%' || #{cd_ctg} || '%')
+		<![CDATA[
+		AND
+			rownum <= #{currentPage}
+		]]>
+		GROUP BY
+			TB_SLE.SEQ_SLE
+			, TB_SLE.SLE_NM
+			, TB_SLE.CD_CTG
+			, TB_SLE.IMG
+			, TB_SLE.DESCES
+			, TB_SLE.PRICE_SALE
+			, ROWNUM
+		ORDER BY 
+			rating DESC
+	</select>
+	
+	<select id="searchCount" parameterType="pagingDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_SLE INNER JOIN TB_CTG ON TB_SLE.CD_CTG = TB_CTG.CD_CTG, TB_CTG TB_CTG2
+		WHERE
+			CD_STATE_SALE = 1
+		AND 
+			TB_CTG.CD_CTG_PARENT = TB_CTG2.CD_CTG
+		AND
+			(SLE_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG.CTG_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG2.CTG_NM LIKE ('%' || #{searchWord} || '%'))
+	</select>
+	
+	<select id="searchList" parameterType="pagingDto" resultType="saleDto">
+		SELECT
+				*
+		FROM
+			(
+			SELECT
+				ROW_NUMBER() OVER (<include refid="orderBy" />) rnum
+				, SEQ_SLE
+				, SLE_NM
+				, TB_SLE.CD_CTG
+				, IMG
+				, DESCES
+				, PRICE_SALE
+				, TB_CTG.CTG_NM
+			FROM
+				TB_SLE INNER JOIN TB_CTG ON TB_SLE.CD_CTG = TB_CTG.CD_CTG, TB_CTG TB_CTG2
+			WHERE
+				CD_STATE_SALE = 1
+			AND 
+				TB_CTG.CD_CTG_PARENT = TB_CTG2.CD_CTG
+			AND
+				(SLE_NM LIKE ('%' || #{searchWord} || '%')
+			OR
+				TB_CTG.CTG_NM LIKE ('%' || #{searchWord} || '%')
+			OR
+				TB_CTG2.CTG_NM LIKE ('%' || #{searchWord} || '%'))
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]>
+	</select>
+	
+	<select id="search" resultType="saleDto" parameterType="saleDto">
+		SELECT
+			ROWNUM as RNUM
+			, TB_SLE.SEQ_SLE
+			, SLE_NM
+			, TB_SLE.CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, TB_CTG.CTG_NM
+			, NVL(avg(rating), 0) rating
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE 
+			INNER JOIN TB_CTG ON TB_SLE.CD_CTG = TB_CTG.CD_CTG
+			, TB_CTG TB_CTG2
+		WHERE
+			CD_STATE_SALE = 1
+		AND 
+			TB_CTG.CD_CTG_PARENT = TB_CTG2.CD_CTG
+		AND
+			(SLE_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG.CTG_NM LIKE ('%' || #{searchWord} || '%')
+		OR
+			TB_CTG2.CTG_NM LIKE ('%' || #{searchWord} || '%'))
+		<![CDATA[
+		AND
+			rownum <= #{currentPage}
+		]]>
+		GROUP BY
+			TB_SLE.SEQ_SLE
+			, TB_SLE.SLE_NM
+			, TB_SLE.CD_CTG
+			, TB_SLE.IMG
+			, TB_SLE.DESCES
+			, TB_SLE.PRICE_SALE
+			, TB_CTG.CTG_NM
+			, ROWNUM
+		ORDER BY 
+			rating DESC
+	</select>
+	
+	<select id="toyListing" resultType="saleDto" parameterType="saleDto">
+		SELECT
+			ROWNUM rnum
+			, TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, NVL(AVG(RATING), 0) AS rating
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND
+			CD_CTG LIKE '0103%'
+		<![CDATA[
+		AND
+			ROWNUM <= 10
+		]]>
+		GROUP BY 
+			TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, TB_SLE.DT_REG
+			, rownum
+		ORDER BY 
+			rating DESC
+	</select>
+	
+	<select id="walkListing" resultType="saleDto" parameterType="saleDto">
+		SELECT
+			ROWNUM rnum
+			, TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, NVL(AVG(RATING), 0) AS rating
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND
+			CD_CTG LIKE '0102%'
+		<![CDATA[
+		AND
+			ROWNUM <= 10
+		]]>
+		GROUP BY 
+			TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, TB_SLE.DT_REG
+			, rownum
+		ORDER BY 
+			rating DESC
+	</select>
+	
+	<select id="feedListing" resultType="saleDto" parameterType="saleDto">
+		SELECT
+			ROWNUM rnum
+			, TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, NVL(AVG(RATING), 0) AS rating
+		FROM
+			TB_SLE LEFT JOIN TB_REV ON TB_SLE.SEQ_SLE = TB_REV.SEQ_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND
+			CD_CTG LIKE '0101%'
+		<![CDATA[
+		AND
+			ROWNUM <= 10
+		]]>
+		GROUP BY 
+			TB_SLE.SEQ_SLE
+			, SLE_NM
+			, CD_CTG
+			, IMG
+			, DESCES
+			, PRICE_SALE
+			, TB_SLE.DT_REG
+			, rownum
+		ORDER BY 
+			rating DESC
+	</select>
+	
+	<select id="selectRev" resultType="reViewDto" parameterType="reViewDto">
+		SELECT
+			tb_rev.SEQ_SLE
+			, tb_rev.SEQ_CST
+			, tb_rev.SEQ_REV
+			, tb_rev.CONTENTS
+			, tb_rev.RATING
+			, (SELECT ID FROM TB_CST tb_cst WHERE tb_cst.SEQ_CST = tb_rev.SEQ_CST) ID
+			, TO_CHAR(tb_rev.DT_REG, 'YYYY/MM/DD') dt_reg
+		FROM
+			TB_REV tb_rev
+		WHERE
+			tb_rev.SEQ_SLE = #{seq_sle}
+	</select>
+	
+	<select id="select" parameterType="saleDto" resultType="saleDto">
+		SELECT
+			SEQ_SLE
+			, SLE_NM
+			, PRICE_SALE
+			, (SELECT AVG(RATING) FROM TB_REV INNER JOIN TB_SLE ON TB_REV.SEQ_SLE = TB_SLE.SEQ_SLE AND TB_SLE.SEQ_SLE= #{seq_sle} GROUP BY TB_REV.SEQ_SLE) AS RATING
+			, IMG
+			, COM_NM
+			, DESCES
+			, REGISTER
+			, (SELECT COUNT(*) FROM TB_REV INNER JOIN TB_SLE ON TB_REV.SEQ_SLE = TB_SLE.SEQ_SLE AND TB_SLE.SEQ_SLE= #{seq_sle} GROUP BY TB_REV.SEQ_SLE) AS COUNT
+		FROM
+			TB_SLE
+		WHERE
+			SEQ_SLE				= #{seq_sle}
+			AND CD_STATE_SALE	= 1
+	</select>
+	
+	<select id="listing" parameterType="saleDto" resultType="saleDto">
+		SELECT
+			ROWNUM rnum 
+			, SEQ_SLE
+			, SLE_NM
+			, PRICE_SALE
+			, IMG
+			, DESCES
+			, REGISTER
+		FROM
+			TB_SLE tb_sle
+		WHERE
+			CD_STATE_SALE = 1
+			AND CD_CTG LIKE (#{cd_ctg} || '%')
+		ORDER BY
+			SEQ_SLE DESC
+	</select>
+	
+	<select id="selectList" parameterType="pagingDto" resultType="saleDto">
+		SELECT
+				*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (<include refid="orderBy" />) rnum
+				, SEQ_SLE
+				, SLE_NM
+				, PRICE_SALE
+				, IMG
+				, DESCES
+				, REGISTER
+			FROM
+				TB_SLE tb_sle
+			WHERE
+				CD_STATE_SALE = 1
+			AND 
+				CD_CTG LIKE (#{cd_ctg} || '%')
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]>
+	</select>
+	
+	<select id="count" parameterType="pagingDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_SLE
+		WHERE
+			CD_STATE_SALE = 1
+		AND 
+			CD_CTG LIKE (#{cd_ctg} || '%')
+	</select>
+	
+	<sql id="orderBy">
+		<choose>
+			<when test="sort != null and sort != ''">
+				<![CDATA[
+				ORDER BY
+					${sort }
+				]]>
+			</when>
+			<otherwise>
+				ORDER BY
+					DT_REG DESC
+			</otherwise>
+		</choose>
+	</sql>
+	
+</mapper>

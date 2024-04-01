@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.himedia.ecommerce.front.mybatis.animal.Animal">
+	
+	<select id="view" parameterType="animalDto" resultType="animalDto">
+		SELECT
+			CD_SIG
+			, SIG_NM
+			, ABD_NO
+			, DT_RECEPT
+			, DISC_INFO
+			, STATE
+			, PBL_NO
+			, TO_CHAR(DT_PBL_START, 'YYYY-MM-DD') DT_PBL_START
+			, TO_CHAR(DT_PBL_END, 'YYYY-MM-DD') DT_PBL_END
+			, SPE_NM
+			, COL_NM
+			, AGE
+			, BDWGH
+			, DECODE(SEX, 'M', '남아', 'F', '여아', 'Q', '알수없음', '알수없음') SEX
+			, DECODE(NEUT_YN, 'Y', '중성화 완료', 'N', '중성화 미완료', 'U', '중성화 알수없음', '중성화 알수없음') NEUT_YN
+			, SFERT
+			, SHTER_NM
+			, SHTER_TELNO
+			, POSTCODE
+			, ADDR1
+			, ADDR2
+			, JURISD
+			, IMG
+			, IMG_THUMB
+		FROM
+			TB_ABD
+		WHERE
+			ABD_NO = ${abd_no}
+	</select>
+	
+	<select id="list" parameterType="pagingDto" resultType="animalDto">
+		SELECT
+			*
+		FROM
+			(
+			SELECT
+				/*+ first_rows(10) */ ROW_NUMBER() OVER (<include refid="orderBy" />) rnum
+				, ABD_NO
+				, DT_RECEPT
+				, DISC_INFO
+				, STATE
+				, PBL_NO
+				, DT_PBL_START
+				, DT_PBL_END
+				, SPE_NM
+				, COL_NM
+				, AGE
+				, BDWGH
+				, DECODE(SEX, 'M', '남아', 'F', '여아', 'Q', '알수없음', '알수없음') SEX
+				, DECODE(NEUT_YN, 'Y', '중성화 완료', 'N', '중성화 미완료', 'U', '중성화 알수없음', '중성화 알수없음') NEUT_YN
+				, SFERT
+				, SHTER_NM
+				, SHTER_TELNO
+				, ADDR1
+				, IMG
+				, IMG_THUMB
+			FROM
+				TB_ABD
+			<!-- WHERE -->
+			<include refid="filter"/>
+			)
+		<![CDATA[
+		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
+		]]> 
+		ORDER BY rnum
+	</select>
+	
+	<!-- <include refid="orderBy" /> ORDER BY PBL_NO DESC -->
+	<sql id="orderBy">
+		<choose>
+			<when test="sort != null and sort != ''">
+				<![CDATA[
+				ORDER BY
+					${sort }
+				]]>
+			</when>
+			<otherwise>
+				ORDER BY
+					PBL_NO DESC
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<select id="count" resultType="java.lang.Integer" parameterType="pagingDto">
+		SELECT
+			COUNT(ROWNUM)
+		FROM
+			TB_ABD
+		<!-- WHERE -->
+		<include refid="filter"/>
+	</select>
+	
+	<select id="counting" resultType="java.lang.Integer">
+		SELECT
+			COUNT(ROWNUM)
+		FROM
+			TB_ABD
+	</select>
+	
+	<sql id="filter">
+		<if test="searchWord != null and searchWord != ''">
+		WHERE
+			<if test="searchKey == 'jurisd'">
+				JURISD LIKE '%' || #{searchWord} || '%'
+			</if>
+			<if test="searchKey == 'spe_nm'">
+				SPE_NM LIKE '%' || #{searchWord} || '%'
+			</if>
+			
+			<if test="sex != 'null' and sex != ''">
+				AND SEX = #{sex}
+			</if>
+			<if test="neut_yn != 'null' and neut_yn != ''">
+				AND NEUT_YN = ${neut_yn}
+			</if>
+			<if test="age != 'null' and age != ''">
+				AND AGE = ${age}
+			</if>
+		</if>
+		
+		<if test="searchWord == null or searchWord == ''">
+			<where>
+				<if test="sex != 'null' and sex != ''">
+					AND SEX = #{sex}
+				</if>
+				<if test="neut_yn != 'null' and neut_yn != ''">
+					AND NEUT_YN = #{neut_yn}
+				</if>
+				<if test="age != 'null' and age != ''">
+					AND AGE = #{age}
+				</if>
+			</where>
+		</if>
+	</sql>
+	
+	<select id="listing" resultType="animalDto" parameterType="animalDto">
+		SELECT
+			ROWNUM
+			, SPE_NM
+			, AGE
+			, COL_NM
+			, DECODE(SEX, 'M', '남아', 'F', '여아', 'Q', '알수없음', '알수없음') SEX
+			, DECODE(NEUT_YN, 'Y', '중성화 완료', 'N', '중성화 미완료', 'U', '중성화 알수없음', '중성화 알수없음') NEUT_YN
+			, BDWGH
+			, PBL_NO
+			, TO_CHAR(DT_PBL_START, 'YYYY-MM-DD') DT_PBL_START
+			, TO_CHAR(DT_PBL_END, 'YYYY-MM-DD') DT_PBL_END
+			, DISC_INFO
+			, SFERT
+			, SHTER_NM
+			, SHTER_TELNO
+			, ADDR1
+			, IMG
+			, IMG_THUMB
+		FROM
+			TB_ABD
+		<![CDATA[
+		WHERE
+			ROWNUM <= #{currentPage}
+		]]> 
+	</select>
+	
+	<insert id="insert" parameterType="animalDto">
+		INSERT INTO TB_ABD
+			(CD_SIG
+			, SIG_NM
+			, ABD_NO
+			, DT_RECEPT
+			, DISC_INFO
+			, STATE
+			, PBL_NO
+			, DT_PBL_START
+			, DT_PBL_END
+			, SPE_NM
+			, COL_NM
+			, AGE
+			, BDWGH
+			, SEX
+			, NEUT_YN
+			, SFERT
+			, SHTER_NM
+			, SHTER_TELNO
+			, POSTCODE
+			, ADDR1
+			, ADDR2
+			, JURISD
+			, IMG
+			, IMG_THUMB
+			)
+		VALUES
+			(#{cd_sig}
+			, #{sig_nm}
+			, #{abd_no}
+			, #{dt_recept}
+			, #{disc_info}
+			, #{state}
+			, #{pbl_no}
+			, #{dt_pbl_start}
+			, #{dt_pbl_end}
+			, #{spe_nm}
+			, #{col_nm}
+			, #{age}
+			, #{bdwgh}
+			, #{sex}
+			, #{neut_yn}
+			, #{sfert}
+			, #{shter_nm}
+			, #{shter_telno}
+			, #{postcode}
+			, #{addr1}
+			, #{addr2}
+			, #{jurisd}
+			, #{img}
+			, #{img_thumb}
+			)
+	</insert>
+	
+	
+	
+</mapper>
