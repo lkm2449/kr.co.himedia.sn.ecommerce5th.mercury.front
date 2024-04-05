@@ -79,6 +79,7 @@
 		WHERE
 			SEQ_CST			= #{register}
 			AND REGISTER	= #{register}
+			AND CD_STATE_PAY	= 'Y'
 	</select>
 	
 	<select id="list" parameterType="pagingDto" resultType="buyMstDto">

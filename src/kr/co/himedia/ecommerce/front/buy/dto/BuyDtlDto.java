@@ -41,6 +41,7 @@ public class BuyDtlDto {
 	private String dt_reg;
 	private int register;
 	private String cd_state_rev;
+	private String cd_state_pay;
 	
 	private String sle_nm;
 	private String img;
@@ -48,7 +49,12 @@ public class BuyDtlDto {
 	private String desces;
 	private String cst_nm;
 	
-	
+	public String getCd_state_pay() {
+		return cd_state_pay;
+	}
+	public void setCd_state_pay(String cd_state_pay) {
+		this.cd_state_pay = cd_state_pay;
+	}
 	public String getCd_state_rev() {
 		return cd_state_rev;
 	}

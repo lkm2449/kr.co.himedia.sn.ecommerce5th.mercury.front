@@ -8,10 +8,15 @@
 			, tb_sle.IMG
 			, tb_buy_dtl.PRICE
 			, tb_buy_dtl.COUNT
+			, tb_buy_dtl.SEQ_BUY_DTL
+			, tb_buy_dtl.SEQ_SLE
 			, TO_CHAR(tb_buy_dtl.DT_REG, 'YYYY-MM-DD') dt_reg
+			, CD_STATE_REV
+			, DECODE(CD_STATE_PAY, 'N', '결제전', 'Y', '결제완료', 'C', '결제취소', '기타') CD_STATE_PAY
 		FROM
 			TB_BUY_DTL			tb_buy_dtl
 			INNER JOIN TB_SLE	tb_sle ON tb_buy_dtl.SEQ_SLE = tb_sle.SEQ_SLE
+			INNER JOIN TB_BUY_MST ON tb_buy_dtl.SEQ_BUY_MST = TB_BUY_MST.seq_buy_mst
 		WHERE
 			tb_buy_dtl.SEQ_BUY_MST	= #{seq_buy_mst}
 			AND tb_buy_dtl.REGISTER	= #{register}

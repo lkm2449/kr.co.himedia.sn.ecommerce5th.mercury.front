@@ -82,7 +82,7 @@ function insertBasket(item) {
 	
 	if (items) {
 		//var itemArray = items.split(',');
-		setCookie2nd("productBasket", items + "," + item, expire);
+		setCookie2nd("productBasket", items + String.fromCharCode([15]) + item, expire);
 		//alert(itemArray.length);
 	}
 	else {

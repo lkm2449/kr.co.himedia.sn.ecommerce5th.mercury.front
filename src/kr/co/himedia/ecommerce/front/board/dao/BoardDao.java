@@ -69,6 +69,10 @@ public class BoardDao extends BaseDao {
 		return sqlSessionFront.selectOne("kr.co.himedia.ecommerce.front.mybatis.board.Board.count", pagingDto);
 	}
 	
+	public int myCount(PagingDto pagingDto) {
+		return sqlSessionFront.selectOne("kr.co.himedia.ecommerce.front.mybatis.board.Board.myCount", pagingDto);
+	}
+	
 	public List<BoardDto> myList(PagingDto pagingDto) {
 		return sqlSessionFront.selectList("kr.co.himedia.ecommerce.front.mybatis.board.Board.myList", pagingDto);
 	}

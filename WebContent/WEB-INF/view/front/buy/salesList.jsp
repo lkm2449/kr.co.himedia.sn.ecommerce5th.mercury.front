@@ -61,7 +61,7 @@
 
 		var item = seq_sle + "|" + sle_nm + "|" + price + "|" + 1 + "|" + img;
 		insertBasket(item);
-			
+
 		if(confirm("장바구니에 상품이 담겼습니다. \n장바구니로 이동하시겠습니까?")) {
 			location.href = "/front/cart/main.web";
 		}
@@ -164,9 +164,9 @@
 								<div class="toolbar-sorter-right">
 									<span>정렬 기준 </span>
 									<select id="basic" name="sort" class="selectpicker show-tick form-control" data-placeholder="$ USD" onchange="sortList()">
-									<option data-display="Select" value="">등록일 순</option>
-									<option value="price_sale asc" <c:if test="${sort == 'price_sale asc'}">selected</c:if>>낮은 가격 순</option>
-									<option value="price_sale desc" <c:if test="${sort == 'price_sale desc'}">selected</c:if>>높은 가격 순</option>
+									<option data-display="Select" value="">등록일순</option>
+									<option value="price_sale asc" <c:if test="${sort == 'price_sale asc'}">selected</c:if>>낮은 가격순</option>
+									<option value="price_sale desc" <c:if test="${sort == 'price_sale desc'}">selected</c:if>>높은 가격순</option>
 								</select>
 								</div>
 								<p></p>

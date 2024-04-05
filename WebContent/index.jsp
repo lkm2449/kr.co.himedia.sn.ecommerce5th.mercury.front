@@ -22,37 +22,49 @@
 	<!-- Start Slider -->
 	<div id="slides-shop" class="cover-slides">
 		<ul class="slides-container">
-			<li class="text-left">
-				<img src="/image/banner-01.jpg" alt="">
+			<li class="text-center">
+				<img src="/image/mainbanner/animalMain1.jpg" alt="">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h1 class="m-b-20"><strong>Welcome<br></strong></h1>
-							<p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
+							<h1 class="m-b-20"><strong>입양<br></strong></h1>
+							<p class="m-b-40">이 아이들은 하루하루 가족을 기다리고있습니다<br> 이 아이들의 소중한 가족이 되어주세요.</p>
+							<p><a class="btn hvr-hover" href="/front/animal/animalList.web">입양 정보 보기</a></p>
+						</div>
+					</div>
+				</div>
+			</li>
+			<li class="text-right">
+				<img src="/image/mainbanner/animalMain5.jpg" alt="">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<h1 class="m-b-20"><strong>사료<br></strong></h1>
+							<p class="m-b-40">사랑하는 만큼<br> 맛있고 좋은 사료를 주세요.</p>
 							<p><a class="btn hvr-hover" href="/front/buy/salesList.web?cd_ctg=0101">상품 보기</a></p>
 						</div>
 					</div>
 				</div>
 			</li>
 			<li class="text-center">
-				<img src="/image/banner-02.jpg" alt="">
+				<img src="/image/mainbanner/animalMain3.jpg" alt="">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h1 class="m-b-20"><strong>Welcome<br></strong></h1>
-							<p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
+							<h1 class="m-b-20"><strong>산책/이동장<br></strong></h1>
+							<p class="m-b-40">가벼운 산책부터 여행까지 <br> 즐거운 추억을 만들어봐요.</p>
 							<p><a class="btn hvr-hover" href="/front/buy/salesList.web?cd_ctg=0102">상품 보기</a></p>
 						</div>
 					</div>
 				</div>
 			</li>
-			<li class="text-right">
-				<img src="/image/banner-03.jpg" alt="">
+			<li class="text-left">
+				<img src="/image/mainbanner/animalMain4.jpg" alt="">
 				<div class="container">
 					<div class="row">
 						<div class="col-md-12">
-							<h1 class="m-b-20"><strong>Welcome<br></strong></h1>
-							<p class="m-b-40">See how your users experience your website in realtime or view <br> trends to see any changes in performance over time.</p>
+							<h1 class="m-b-20"><strong>장난감<br></strong></h1>
+							<p class="m-b-40">다양한 장난감으로 <br> 건강하고 즐겁게 놀아주세요.</p>
 							<p><a class="btn hvr-hover" href="/front/buy/salesList.web?cd_ctg=0103">상품 보기</a></p>
 						</div>
 					</div>

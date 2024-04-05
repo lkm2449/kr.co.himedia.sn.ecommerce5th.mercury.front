@@ -51,6 +51,25 @@ public class CustomerSrvc {
 	@Inject
 	CustomerDao customerDao;
 	
+	@Transactional("txFront")
+	public boolean insertReViewM(ReViewDto reViewDto) {
+		
+		reViewDto.setSeq_rev(customerDao.sequenceRev());
+		
+		int result = customerDao.insertReViewM(reViewDto);
+		int result2nd = customerDao.updateRev(reViewDto);
+		
+		if(result == 1 && result2nd == 1) return true;
+		else {
+			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			return false;
+		}
+	}
+	
+	public int writeReview(CustomerDto customerDto) {
+		return customerDao.writeReview(customerDto);
+	}
+	
 	public List<SaleDto> reviewList(CustomerDto customerDto){
 		return customerDao.reviewList(customerDto);
 	}
@@ -102,7 +121,6 @@ public class CustomerSrvc {
 			return false;
 		}
 	}
-	
 	
 	@Transactional("txFront")
 	public boolean insertRev(ReViewDto reViewDto) {

@@ -27,7 +27,7 @@
 		WHERE
 			CD_STATE_SALE = 1
 		AND
-			CD_CTG LIKE ('%' || #{cd_ctg} || '%')
+			CD_CTG LIKE (#{cd_ctg} || '%')
 	</select>
 	
 	<select id="salesList" resultType="saleDto" parameterType="saleDto">
@@ -45,7 +45,7 @@
 		WHERE
 			CD_STATE_SALE = 1
 		AND
-			CD_CTG LIKE ('%' || #{cd_ctg} || '%')
+			CD_CTG LIKE (#{cd_ctg} || '%')
 		<![CDATA[
 		AND
 			rownum <= #{currentPage}

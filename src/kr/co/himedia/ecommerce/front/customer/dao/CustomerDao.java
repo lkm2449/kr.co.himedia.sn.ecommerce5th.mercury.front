@@ -44,6 +44,14 @@ import kr.co.himedia.ecommerce.front.sale.dto.SaleDto;
 @Repository("kr.co.himedia.ecommerce.front.customer.dao.CustomerDao")
 public class CustomerDao extends BaseDao {
 	
+	public int insertReViewM(ReViewDto reViewDto) {
+		return sqlSessionFront.insert("kr.co.himedia.ecommerce.front.mybatis.review.Review.insertReViewM", reViewDto);
+	}
+	
+	public int writeReview(CustomerDto customerDto) {
+		return sqlSessionFront.selectOne("kr.co.himedia.ecommerce.front.mybatis.customer.Customer.writeReview", customerDto);
+	}
+	
 	public List<SaleDto> reviewList(CustomerDto customerDto){
 		return sqlSessionFront.selectList("kr.co.himedia.ecommerce.front.mybatis.customer.Customer.reviewList", customerDto);
 	}

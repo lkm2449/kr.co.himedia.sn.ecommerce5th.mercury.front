@@ -12,13 +12,12 @@
 	<%@ include file="/include/front/top.jsp" %>
 	<%@ include file="/include/front/header.jsp" %>
 	
-	
 		<!-- Start All Title Box -->
 	<div class="all-title-box">
 		<div class="container">
 			<div class="row">
 				<div class="col-lg-12">
-					<h2>Shop</h2>
+					<h2>함께할개</h2>
 				</div>
 			</div>
 		</div>

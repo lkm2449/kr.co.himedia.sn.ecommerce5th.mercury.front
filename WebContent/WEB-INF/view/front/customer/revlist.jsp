@@ -29,11 +29,11 @@
 						<table class="table" style="word-break:keep-all">
 							<thead>
 								<tr>
-									<th style="width: 5%">NO</th>
+									<th>NO</th>
 									<th>상품명</th>
 									<th>상품 이미지</th>
 									<th>리뷰 내용</th>
-									<th>별점</th>
+									<th style="width: 5%">별점</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -61,7 +61,7 @@
 																<td>
 																	<img src="${list.img}" width="100" height="100" />
 																</td>
-																<td>
+																<td style="word-break:break-all; width: 400px;">
 																	${list.contents}
 																</td>
 																<td>

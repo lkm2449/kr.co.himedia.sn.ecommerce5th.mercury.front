@@ -74,7 +74,7 @@ public class AnimalWeb {
 	}
 	
 	@RequestMapping(value = "/front/animal/animalList.web")
-	public ModelAndView faqList (HttpServletRequest request, HttpServletResponse response, PagingDto pagingDto) {
+	public ModelAndView animalList(HttpServletRequest request, HttpServletResponse response, PagingDto pagingDto) {
 		
 		ModelAndView mav = new ModelAndView("redirect:/error.web");
 		

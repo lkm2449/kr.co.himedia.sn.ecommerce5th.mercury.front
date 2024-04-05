@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.co.himedia.ecommerce.front.mybatis.review.Review">
 	
+	<insert id="insertReViewM" parameterType="reViewDto">
+		INSERT INTO TB_REV
+			(SEQ_REV, SEQ_SLE, SEQ_CST, CONTENTS, RATING, DT_REG)
+		VALUES
+			(#{seq_rev}, #{seq_sle}, #{seq_cst}, #{contents}, #{rating}, SYSDATE)
+	</insert>
+	
 	<insert id="insertRev" parameterType="reViewDto">
 		INSERT INTO TB_REV
 			(SEQ_REV, SEQ_SLE, SEQ_CST, CONTENTS, RATING, DT_REG)

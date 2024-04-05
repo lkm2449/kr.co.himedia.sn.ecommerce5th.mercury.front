@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import kr.co.himedia.ecommerce.common.Common;
+import kr.co.himedia.ecommerce.front.board.dto.ReViewDto;
 import kr.co.himedia.ecommerce.front.buy.dto.BuyDtlDto;
 import kr.co.himedia.ecommerce.front.buy.dto.BuyMstDto;
 import kr.co.himedia.ecommerce.front.buy.service.BuySrvc;
@@ -87,6 +88,25 @@ public class CustomerApi extends Common {
 	 * </p>
 	 */
 	
+	@RequestMapping(value = "/front/customer/writeReview.api", method = RequestMethod.POST, headers = {"content-type=application/json; charset=UTF-8", "accept=application/json"}, consumes="application/json; charset=UTF-8", produces="application/json; charset=UTF-8")
+	public @ResponseBody boolean writeReview(@RequestBody final ReViewDto reViewDto) {
+		
+		boolean isSuccess = false;
+		
+		try {
+			
+			if (customerSrvc.insertReViewM(reViewDto)) isSuccess = true;
+			
+			debuggingJSON(isSuccess);
+			
+		}
+		catch (Exception e) {
+			logger.error("[" + this.getClass().getName() + ".writeReview()] " + e.getMessage(), e);
+		}
+		finally {}
+		
+		return isSuccess;
+	}
 	
 	@RequestMapping(value = "/front/customer/reviewList.api", method = RequestMethod.POST, headers = {"content-type=application/json; charset=UTF-8", "accept=application/json"}, consumes="application/json; charset=UTF-8", produces="application/json; charset=UTF-8")
 	public @ResponseBody List<SaleDto> reviewList(@RequestBody final CustomerDto customerDto) {

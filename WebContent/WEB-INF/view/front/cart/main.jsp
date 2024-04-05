@@ -69,8 +69,6 @@
 									$("input[name=site_name]").val("payup");
 									$("input[name=currency]").val("WON");
 									
-									
-									
 									jsf__pay();
 								}
 							},
@@ -170,7 +168,8 @@
 		window.onload = function() {
 			
 			var items		= getCookie2nd("productBasket");
-			var itemArray	= items.split(",");
+			if (items) {
+			var itemArray	= items.split(String.fromCharCode([15]));
 			
 			var totalCount = 0;
 			
@@ -196,7 +195,7 @@
 					} else if(i === 3){
 							temp_html = '<td class="thumbnail-img"><a href="#"><img class="img-fluid" style="height: 100px" src="' + item[4] + '" alt="" /></a></td>';
 					} else if(i === 4){
-							temp_html = '<td><p><input type="hidden" name="buyList['+loop+'].count" value="'+ item[3] + '"/><input type="number" name="count" min="0" step="1" class="c-input-text qty text" value="' + item[3] + '" onchange="updateCart()"></p></td>';
+							temp_html = '<td><p><input type="hidden" name="buyList['+loop+'].count" value="'+ item[3] + '"/><input type="number" name="count" min="1" step="1" class="c-input-text qty text" value="' + item[3] + '" onchange="updateCart()"></p></td>';
 					} else if(i === 5){
 							temp_html = '<td><a href="javascript:removeRow('+loop+')"><i class="fas fa-times"></i></a></td>';
 					}
@@ -207,42 +206,54 @@
 			}
 			
 			document.getElementById("totalCount").innerHTML = totalCount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + "원";
+			}
 		}
 		
+		//장바구니 물품 빼기
 		function removeRow(index) {
 			
 			var items		= getCookie2nd("productBasket");
-			var itemArray	= items.split(",");
+			var item		= items.split(String.fromCharCode([15]));
 			// 쿠키값을 저장할 기간(일), null일 경우는 브라우저 닫을 시 삭제됨
 			var expire = null;
 			
-			if(itemArray.length == 1){
+			if(item.length == 1){
 				deleteCookie2nd("productBasket");
 			} else {
-				itemArray.splice(index, 1);
-				var item = itemArray;
-				setCookie2nd("productBasket", item, expire);
+				deleteCookie2nd("productBasket");
+				
+				for (i = 0; i < item.length; i++) {
+					if (i != index) {
+						insertBasket(item[i]);
+					}
+				}
 			}
 			// 해당 행을 삭제하고 다시 그리기
 			location.href = "/front/cart/main.web";
 		}
 		
+		//장바구니 물품 수량변경
 		function updateCart() {
+			
 			// 변경 하고자 하는 count값 저장
 			var arrCount = document.getElementsByName("count");
 			var totalCount = 0;
+			
+			//기존 장바구니 쿠키 선언
+			var items		= getCookie2nd("productBasket");
+			var itemArray	= items.split(String.fromCharCode([15]));
+			
+			deleteCookie2nd("productBasket");
+			
 			// 저장한 값 개수 만큼 루프
 			for (i = 0; i < arrCount.length; i++) {
 				
 				// i 번째 값 선언
 				var count = (document.getElementsByName("count")[i].value);
 				
-				//기존 장바구니 쿠키 선언
-				var items		= getCookie2nd("productBasket");
-				var itemArray	= items.split(",");
-				
+				// 테이블 컬럼 수
 				var table = document.getElementById("productBasket");
-				var cell_length = table.rows[0].cells.length; // 테이블 컬럼 수
+				var cell_length = table.rows[0].cells.length; 
 				
 				var item = itemArray[i].split("|");
 				new_row = table.insertRow();
@@ -251,12 +262,11 @@
 				
 				// 갯수 변경
 				var item = item[0] + "|" + item[1] + "|" + item[2] + "|" + count + "|" + item[4];
-			
-				itemArray.splice(i, 1, item);
 				
+				//itemArray.splice(i, 1, item);
 				
+				insertBasket(item);
 				
-				setCookie2nd("productBasket", itemArray, null);
 			}
 			
 			document.getElementById("totalCount").innerHTML = totalCount.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",") + "원";
@@ -309,7 +319,7 @@
 				<div class="col-lg-6 col-sm-6">
 					<div class="coupon-box">
 						<div class="input-group input-group-sm">
-							<input class="form-control" name="requests" placeholder="Enter your request" aria-label="Coupon code" type="text">
+							<input class="form-control" name="requests" placeholder="요청 사항" aria-label="Coupon code" type="text">
 						</div><br/>
 							<input type="radio" id="cert" name="chk_info" value="cert" checked="checked">
 							<label for="cert"><span class="round">인증결제</span></label>

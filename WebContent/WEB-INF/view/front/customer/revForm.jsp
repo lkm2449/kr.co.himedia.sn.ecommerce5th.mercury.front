@@ -27,12 +27,12 @@
 	}
 	
 	.star-rating :checked ~ label {
-		-webkit-text-fill-color: gold;
+		-webkit-text-fill-color: #FE642E;
 	}
 	
 	.star-rating label:hover,
 	.star-rating label:hover ~ label {
-		-webkit-text-fill-color: #fff58c;
+		-webkit-text-fill-color: #F79F81;
 	}
 	</style>
 	<script>
@@ -73,7 +73,7 @@
 							<tr>
 								<th>리뷰</th>
 								<td>
-									<input type="text" id="contents" name="contents" />
+									<input type="text" id="contents" name="contents" style = "width: 500px;"/>
 								</td>
 							</tr>
 							<tr>

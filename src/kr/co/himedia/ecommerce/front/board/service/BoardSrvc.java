@@ -110,7 +110,7 @@ public class BoardSrvc {
 		
 		PagingListDto pagingListDto = new PagingListDto();
 		
-		int totalLine = boardDao.count(pagingDto);
+		int totalLine = boardDao.myCount(pagingDto);
 		int totalPage = (int)Math.ceil((double)totalLine / (double)pagingDto.getLinePerPage());
 		pagingDto.setTotalLine(totalLine);
 		pagingDto.setTotalPage(totalPage);

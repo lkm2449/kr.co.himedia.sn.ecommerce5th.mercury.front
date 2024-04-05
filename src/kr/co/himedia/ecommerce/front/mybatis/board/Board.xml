@@ -6,7 +6,21 @@
 		SELECT
 			COUNT(ROWNUM)
 		FROM
-			TB_BBS bbs
+			TB_BBS
+		WHERE
+			CD_BBS_TYPE = #{cd_bbs_type}
+			AND flg_delete = 'N'
+	</select>
+	
+	<select id="myCount" parameterType="pagingDto" resultType="java.lang.Integer">
+		SELECT
+			COUNT(ROWNUM)
+		FROM
+			TB_BBS
+		WHERE
+			CD_BBS_TYPE = #{cd_bbs_type}
+			AND REGISTER = #{register}
+			AND flg_delete = 'N'
 	</select>
 	
 	<select id="myList" parameterType="pagingDto" resultType="boardDto">
@@ -28,7 +42,7 @@
 			WHERE
 				CD_BBS_TYPE = #{cd_bbs_type}
 				AND REGISTER = #{register}
-				AND bbs.flg_delete = 'N'	
+				AND bbs.flg_delete = 'N'
 			)
 		<![CDATA[
 		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}
@@ -54,7 +68,7 @@
 				TB_BBS bbs
 			WHERE
 				CD_BBS_TYPE = #{cd_bbs_type}
-				AND bbs.flg_delete = 'N'	
+				AND bbs.flg_delete = 'N'
 			)
 		<![CDATA[
 		WHERE rnum >= (${currentPage} - 1) * ${linePerPage} + 1 AND rnum <= ${currentPage} * ${linePerPage}

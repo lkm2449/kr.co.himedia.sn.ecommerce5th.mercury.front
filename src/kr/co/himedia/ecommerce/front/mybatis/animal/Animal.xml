@@ -117,10 +117,10 @@
 				AND SEX = #{sex}
 			</if>
 			<if test="neut_yn != 'null' and neut_yn != ''">
-				AND NEUT_YN = ${neut_yn}
+				AND NEUT_YN = #{neut_yn}
 			</if>
 			<if test="age != 'null' and age != ''">
-				AND AGE = ${age}
+				AND AGE = #{age}
 			</if>
 		</if>
 		

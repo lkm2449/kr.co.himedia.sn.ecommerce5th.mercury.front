@@ -115,13 +115,13 @@
 			if (value === 'nav-about-tab') {
 				$('#nav-about').addClass('active');
 				$('#nav-mission').removeClass('active');
-
+				
 				$('#nav-about-tab').addClass('active');
 				$('#nav-mission-tab').removeClass('active');
 			} else if (value === 'nav-mission-tab') {
 				$('#nav-about').removeClass('active');
 				$('#nav-mission').addClass('active');
-
+				
 				$('#nav-about-tab').removeClass('active');
 				$('#nav-mission-tab').addClass('active');
 			}
@@ -134,8 +134,8 @@
 	<%@ include file="/include/front/top.jsp" %>
 	<%@ include file="/include/front/header.jsp" %>
 <form id="frmMain" method="POST">
+	<input type="hidden" name="seq_sle" id="seq_sle" value="${saleDto.seq_sle}" />
 	<input type="hidden" name="buyList[0].seq_sle"		id="seq_sle"		value="${saleDto.seq_sle}" />
-
 	<input type="hidden" name="buyList[0].sle_nm"		id="sle_nm"			value="${saleDto.sle_nm}" />
 	<input type="hidden" name="buyList[0].price"		id="price"			value="${saleDto.price_sale}" />
 	<input type="hidden" name="flgMobile"	id="flgMobile"		value="${flgMobile}" />
@@ -236,7 +236,7 @@
 											</div>
 											<br/>
 											<div class="d-flex justify-content-between">
-												<h2>${selectRev.contents} </h2>
+												<h2 style="word-break:break-all; width: 950px;">${selectRev.contents} </h2>
 											</div>
 										</div>
 									</div>
